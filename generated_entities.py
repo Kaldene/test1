@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from typing import Optional
 
 @dataclass
@@ -8,7 +8,7 @@ class Book:
     title: str
     author: str
     isbn: str
-    status: str = "available" # available, borrowed
+    status: str = "available"
     total_copies: int = 1
     available_copies: int = 1
 
@@ -41,7 +41,6 @@ class Reader:
         return f"{self.first_name} {self.last_name}"
 
     def can_borrow(self) -> bool:
-        # Нельзя брать книги, если заблокирован или долг >= 100р
         return self.is_active and self.total_fine < 100.0
 
     def add_fine(self, amount: float):
@@ -76,6 +75,6 @@ class Loan:
         self.is_returned = True
         if self.is_overdue():
             days_overdue = self.get_days_overdue()
-            self.fine_amount = days_overdue * 10 # 10 руб за день
+            self.fine_amount = days_overdue * 10
             return self.fine_amount
         return 0.0

@@ -4,7 +4,7 @@ from generated_entities import Book, Reader, Loan
 class BookService:
     def __init__(self, books_store: dict, loans_store: dict):
         self.books_store = books_store
-        self.loans_store = loans_store # Добавлено для совместимости с main.py
+        self.loans_store = loans_store
 
     def search_books(self, query: str) -> List[Book]:
         results = []
@@ -36,58 +36,6 @@ class LoanService:
         self.readers_store = readers_store
 
     def issue_book(self, reader_id: str, book_id: str) -> Optional[Loan]:
-        # 1. Проверка читателя
         reader = self.readers_store.get(reader_id)
         if not reader:
-            print(f"Ошибка: Читатель {reader_id} не найден")
             return None
-        if not reader.can_borrow():
-            print(f"Ошибка: Читатель {reader.get_full_name()} не может брать книги (долг: {reader.total_fine})")
-            return None
-
-        # 2. Проверка книги
-        book = self.books_store.get(book_id)
-        if not book:
-            print(f"Ошибка: Книга {book_id} не найдена")
-            return None
-        if not book.is_available():
-            print(f"Ошибка: Книга '{book.title}' недоступна")
-            return None
-
-        # 3. Создание записи
-        import uuid
-        loan_id = str(uuid.uuid4())[:8].upper()
-        new_loan = Loan(loan_id=loan_id, reader_id=reader_id, book_id=book_id)
-        self.loans_store[loan_id] = new_loan
-
-        # 4. Обновление книги
-        book.borrow_copy()
-
-        return new_loan
-
-    def return_book(self, loan_id: str) -> float:
-        loan = self.loans_store.get(loan_id)
-        if not loan:
-            print("Ошибка: Запись о выдаче не найдена")
-            return 0.0
-        if loan.is_returned:
-            print("Предупреждение: Книга уже возвращена")
-            return 0.0
-
-        # Расчет штрафа
-        fine = loan.mark_returned()
-
-        # Возврат книги в каталог
-        book = self.books_store.get(loan.book_id)
-        if book:
-            book.return_copy()
-
-        # Начисление штрафа читателю
-        reader = self.readers_store.get(loan.reader_id)
-        if reader and fine > 0:
-            reader.add_fine(fine)
-
-        return fine
-
-    def get_all_active_loans(self) -> List[Loan]:
-        return [loan for loan in self.loans_store.values() if not loan.is_returned]
