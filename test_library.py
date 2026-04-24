@@ -9,7 +9,7 @@ class TestLibrarySystem(unittest.TestCase):
         self.books = {}
         self.readers = {}
         self.loans = {}
-        # Исправление ошибки TypeError: передаем оба аргумента
+        # Важно: передаем оба аргумента в BookService
         self.book_service = BookService(self.books, self.loans)
         self.reader_service = ReaderService(self.readers)
         self.loan_service = LoanService(self.loans, self.books, self.readers)
@@ -55,6 +55,8 @@ class TestLibrarySystem(unittest.TestCase):
         self.readers["R001"] = Reader("R001", "Ivan", "Petrov", "ivan@mail.ru")
 
         loan = self.loan_service.issue_book("R001", "B001")
+        self.assertIsNotNone(loan)  # Проверяем, что выдача прошла
+
         fine = self.loan_service.return_book(loan.loan_id)
 
         self.assertEqual(fine, 0.0)
@@ -66,6 +68,8 @@ class TestLibrarySystem(unittest.TestCase):
         self.readers["R001"] = Reader("R001", "Ivan", "Petrov", "ivan@mail.ru")
 
         loan = self.loan_service.issue_book("R001", "B001")
+        self.assertIsNotNone(loan)
+
         # Симуляция просрочки на 5 дней
         loan.due_date = date.today() - timedelta(days=5)
 
