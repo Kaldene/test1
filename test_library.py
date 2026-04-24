@@ -8,7 +8,8 @@ class TestLibrarySystem(unittest.TestCase):
         self.books = {}
         self.readers = {}
         self.loans = {}
-        self.book_service = BookService(self.books)
+        # ИСПРАВЛЕНИЕ: добавлен второй аргумент self.loans
+        self.book_service = BookService(self.books, self.loans)
         self.loan_service = LoanService(self.loans, self.books, self.readers)
 
     def test_book_creation(self):
