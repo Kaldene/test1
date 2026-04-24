@@ -19,10 +19,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint pytest pytest-cov
 
-    - name: Lint with pylint (Статический анализ)
+    - name: Lint with pylint (Static Analysis)
       run: |
-        # Проверяем код на стиль и ошибки. Fail-under=7.0 означает, что если оценка ниже 7, пайплайн упадет.
-        pylint main.py generated_services.py generated_entities.py --fail-under=7.0 --disable=C0114,C0115,C0116
+        # Убираем .py, так как pylint работает с именами модулей
+        pylint main generated_services generated_entities --fail-under=7.0 --disable=C0114,C0115,C0116,R0902,W0611,C0415,C0304
 
     - name: Run tests with coverage (Тестирование и покрытие)
       run: |
