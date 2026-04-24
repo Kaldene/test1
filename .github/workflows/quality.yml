@@ -22,7 +22,7 @@ jobs:
     - name: Lint with pylint
       run: |
         # Проверяем только наш простой файл. Отключаем строгие проверки документации.
-        pylint simple_demo.py --fail-under=7.0 --disable=C0114,C0115,C0116,R0903
+        pylint simple_demo --fail-under=7.0 --disable=C0114,C0115,C0116,R0903
 
     - name: Security scan with bandit
       run: |
