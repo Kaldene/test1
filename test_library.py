@@ -9,7 +9,7 @@ class TestLibrarySystem(unittest.TestCase):
         self.books = {}
         self.readers = {}
         self.loans = {}
-        # Важно: передаем оба аргумента в BookService
+        # Исправление ошибки TypeError: передаем оба аргумента
         self.book_service = BookService(self.books, self.loans)
         self.reader_service = ReaderService(self.readers)
         self.loan_service = LoanService(self.loans, self.books, self.readers)
