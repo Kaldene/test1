@@ -1,0 +1,37 @@
+name: Quality Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  quality-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint pytest pytest-cov
+
+    - name: Lint with pylint (Статический анализ)
+      run: |
+        # Проверяем код на стиль и ошибки. Fail-under=7.0 означает, что если оценка ниже 7, пайплайн упадет.
+        pylint main.py generated_services.py generated_entities.py --fail-under=7.0 --disable=C0114,C0115,C0116
+
+    - name: Run tests with coverage (Тестирование и покрытие)
+      run: |
+        # Запускаем тесты и считаем покрытие. Если покрытие < 70%, пайплайн упадет.
+        pytest test_library.py --cov=. --cov-fail-under=70 --cov-report=term-missing
+
+    - name: Upload coverage report (Артефакт)
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-report
+        path: htmlcov/
