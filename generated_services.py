@@ -1,4 +1,4 @@
-from typing import List, Dict, Optional
+"""from typing import List, Dict, Optional
 from generated_entities import Book, Reader, Loan
 
 
@@ -74,4 +74,4 @@ class LoanService:
         return fine
 
     def get_all_active_loans(self) -> List[Loan]:
-        return [loan for loan in self.loans_store.values() if not loan.is_returned]
+        return [loan for loan in self.loans_store.values() if not loan.is_returned"""

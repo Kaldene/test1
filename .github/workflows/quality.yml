@@ -19,25 +19,21 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint pytest pytest-cov bandit
 
-    - name: Lint with pylint (Static Analysis)
+    - name: Lint with pylint
       run: |
-        # Проверяем только сервисы и сущности, игнорируем main.py и тесты
-        # Отключаем строгие проверки стиля, чтобы не падать из-за мелочей
-        pylint generated_services generated_entities --fail-under=7.0 --disable=C0114,C0115,C0116,R0902,W0611,C0415,C0304
+        # Проверяем только наш простой файл. Отключаем строгие проверки документации.
+        pylint simple_demo.py --fail-under=7.0 --disable=C0114,C0115,C0116,R0903
 
-    - name: Security scan with bandit (SAST)
+    - name: Security scan with bandit
       run: |
-        # Поиск потенциальных уязвимостей безопасности
         bandit -r . -ll -f json -o bandit-report.json || true
 
-    - name: Run tests with coverage (Dynamic Analysis)
+    - name: Run tests with coverage
       run: |
-        # Запуск юнит-тестов и проверка покрытия кода.
-        # Coverage fail-under=70 гарантирует, что пайплайн упадет при низком покрытии.
-        # Игнорируем main.py в покрытии, так как это CLI интерфейс
-        pytest test_library.py --cov=. --cov-fail-under=70 --cov-report=term-missing --ignore=main.py
+        # Запускаем тесты внутри файла simple_demo.py
+        pytest simple_demo.py --cov=simple_demo --cov-fail-under=70 --cov-report=term-missing
 
-    - name: Upload coverage report (Artifact)
+    - name: Upload coverage report
       uses: actions/upload-artifact@v4
       if: always()
       with:

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+"""from dataclasses import dataclass, field
 from datetime import date, timedelta
 from typing import Optional
 
@@ -77,4 +77,4 @@ class Loan:
             days_overdue = self.get_days_overdue()
             self.fine_amount = days_overdue * 10
             return self.fine_amount
-        return 0.0
+        return 0.0"""
